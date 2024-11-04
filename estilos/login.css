@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+}
+
+.left-section, .right-section {
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-section {
+    background-color: #181818;
+    color: #f5f5f5;
+    position: relative;
+    transition: background 0.3s ease;
+}
+
+.right-section {
+    background-color: #fafafa;
+    transition: background 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.back-button:hover {
+    color: #bbb;
+}
+
+.login-form {
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.login-form h2 {
+    font-size: 24px;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+
+.input-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"] {
+    width: 100%;
+    padding: 12px 40px 12px 10px;
+    background: #333;
+    border: none;
+    border-bottom: 1px solid #555;
+    color: #f5f5f5;
+    font-size: 16px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.input-group input::placeholder {
+    color: #777;
+    font-size: 14px;
+}
+
+.input-group input:focus {
+    background: #444;
+    color: #fff;
+    outline: none;
+}
+
+.input-group .icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #888;
+}
+
+.remember-me input {
+    margin-right: 8px;
+}
+
+.sign-in-button {
+    width: 100%;
+    padding: 12px;
+    background: #444;
+    border: none;
+    border-radius: 6px;
+    color: #f5f5f5;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.sign-in-button:hover {
+    background: #555;
+}
+
+.create-account {
+    margin-top: 2rem;
+    font-size: 14px;
+    color: #888;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.create-account:hover {
+    color: #bbb;
+} /* Animación de rotación */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Estilo del ícono de carga */
+.loading-icon {
+    font-size: 48px;
+    display: inline-block;
+    animation: spin 1s linear infinite; /* Animación de rotación continua */
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
