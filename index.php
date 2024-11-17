@@ -5,7 +5,7 @@ session_start();
 include 'db.php';
 
 require 'clases/Usuario.php';
-Usuario::verificarSesion();
+
 
 require 'clases/Tarea.php';
 require 'clases/ManagerTareas.php';

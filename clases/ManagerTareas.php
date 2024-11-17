@@ -1,5 +1,8 @@
 <?php
 include 'db.php'; //la conexión
+require_once './correo.php'; // En lugar de require
+
+
 
 class ManagerTareas {
     private $db;
@@ -28,13 +31,14 @@ class ManagerTareas {
     /******************************************/
 
     public function agregarTareas($t){
-        $sql = "insert into tarea(nombre, descripcion,prioridad,fecha_limite)values (?,?,?,?)";
+        $sql = "insert into tarea(nombre, descripcion,prioridad,fecha_limite, user_id)values (?,?,?,?,?)";
         $res = $this->db->prepare($sql);
         $res->execute([
             $t->getNombre(),
             $t->getDescripcion(),
             $t->getPrioridad(),
-            $t->getFechalimite()
+            $t->getFechalimite(),
+            $_SESSION['user_id']
         ]);
 
         $id = $this->db->lastInsertId();
@@ -43,33 +47,36 @@ class ManagerTareas {
 
         $this->tareas[$id] = $t;
         $_SESSION['tareas'] = serialize($this->tareas);
+      
+       
     }
 
-    public function obtenerTareas(){
-        $sql = "select * from tarea";
+    public function obtenerTareas() {
+        // Filtra las tareas para el usuario que está logueado
+        $sql = "SELECT * FROM tarea WHERE user_id = ?";
         $res = $this->db->prepare($sql);
-        $res->execute();
-
-        //crear array vacío para almacenar lo que se extrae de la base de datos
+        $res->execute([$_SESSION['user_id']]);
+    
+        // Crear array vacío para almacenar lo que se extrae de la base de datos
         $tareas = [];
-
-        //recorrer el resultado de cada fila
-        foreach($res as $fila){
-            $t  =new Tarea (
+    
+        // Recorrer el resultado de cada fila
+        foreach ($res as $fila) {
+            $t = new Tarea(
                 $fila['id'],
                 $fila['nombre'],
                 $fila['descripcion'],
                 $fila['prioridad'],
                 $fila['fecha_limite']
             );
-
-            //agregar las cada objeto tarea al array local(el de la función no el de clase)
+    
+            // Agregar cada objeto tarea al array local (el de la función, no el de clase)
             $tareas[] = $t;
         }
-
+    
         return $tareas;
     }
-
+    
 
     //solo una , para editarla o eliminarla
     public function obtenerTarea($id){
@@ -91,34 +98,52 @@ class ManagerTareas {
 
     }
 
-    public function editarTarea($id, $t){
-        $sql = "update tarea set nombre=?, descripcion= ?, prioridad = ?, fecha_limite = ? where id= ?";
+    public function eliminarTarea($id) {
+        // Asegurarse de que el usuario que intenta eliminar la tarea es el propietario
+        $sql = "DELETE FROM tarea WHERE id = ? AND user_id = ?";
+        $res = $this->db->prepare($sql);
+        $res->execute([$id, $_SESSION['user_id']]);
+    }
+    
+    public function editarTarea($id, $t) {
+        // Asegurarse de que el usuario que intenta editar la tarea es el propietario
+        $sql = "UPDATE tarea SET nombre=?, descripcion=?, prioridad=?, fecha_limite=? WHERE id=? AND user_id=?";
         $res = $this->db->prepare($sql);
         $res->execute([
             $t->getNombre(),
             $t->getDescripcion(),
             $t->getPrioridad(),
             $t->getFechalimite(),
-            $id
+            $id,
+            $_SESSION['user_id']
         ]);
-
-
-        //actualizar el id local
+    
+        // Actualizar el id local
         $t->setId($id);
         $this->tareas[$id] = $t;
         $_SESSION['tareas'] = serialize($this->tareas);
     }
+    
 
 
-
-
-
-
-    public function eliminarTarea($id){
-        $sql = "delete from tarea where id= ?";
-        $res = $this->db->prepare($sql);
-        $res->execute([$id]); //pasarle el id para completar la query
+    function enviarNotificacionTarea($accion, $tarea) {
+        $asunto = "Notificación Tarea $accion";
+        $mensaje = "
+            <html>
+                <body>
+                    <h2>Tarea $accion</h2>
+                    <p><strong>Nombre:</strong> {$tarea->getNombre()}</p>
+                    <p><strong>Descripción:</strong> {$tarea->getDescripcion()}</p>
+                    <p><strong>Prioridad:</strong> {$tarea->getPrioridad()}</p>
+                    <p><strong>Fecha Límite:</strong> {$tarea->getFechaLimite()}</p>
+                </body>
+            </html>
+        ";
+        enviarCorreo($asunto, $mensaje);
     }
+    
+    
+    
 }
 
 

@@ -5,8 +5,9 @@ require 'clases/ManagerTareas.php';
 require 'clases/Tarea.php';
 require 'db.php'; 
 
+
 require 'clases/Usuario.php';
-Usuario::verificarSesion();
+
 
 $error = '';
 $m = new ManagerTareas($db);
@@ -28,6 +29,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         $nuevaT->validar();
         $m->editarTarea($id, $nuevaT);
+
+        $m->enviarNotificacionTarea("Editada", $nuevaT);
 
         header('Location: index.php');
         exit;
