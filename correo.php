@@ -40,7 +40,7 @@ try {
 
     //Recipients
     $mail->setFrom('ana4s3crwt@gmail.com', 'Ana');                                     // Set sender (email, name)
-    $mail->addAddress('lernikgpt@gmail.com', '');                                  // Add a recipient (email, name)
+    $mail->addAddress('dwes.ieslamar@gmail.com', '');                                  // Add a recipient (email, name)
     //$mail->addAddress('ellen@example.com');                   // Name is optional
     $mail->addReplyTo('an4s3crwt@gmail.com', 'Ana');                                  // Set reply to (email, name)
     //$mail->addCC('cc@example.com');
